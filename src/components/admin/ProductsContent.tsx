@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { Plus, Pencil, Trash2, Loader2, ArrowLeft, Upload, X } from 'lucide-react'
+import { Plus, Pencil, Trash2, Loader2, ArrowLeft, X } from 'lucide-react'
 import type { Product, Category } from '@/lib/types'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -166,8 +166,9 @@ export default function ProductsContent({ initialProducts, categories }: Product
         )
       `).order('created_at', { ascending: false })
       setProducts(data || [])
-    } catch (error: any) {
-      toast.error(error.message || 'Operation failed')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Operation failed'
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -195,8 +196,9 @@ export default function ProductsContent({ initialProducts, categories }: Product
         )
       `).order('created_at', { ascending: false })
       setProducts(data || [])
-    } catch (error: any) {
-      toast.error(error.message || 'Delete failed')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Delete failed'
+      toast.error(errorMessage)
     }
   }
 

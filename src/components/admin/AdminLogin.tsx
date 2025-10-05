@@ -32,8 +32,9 @@ export default function AdminLogin() {
       toast.success('Login successful!')
       router.push('/admin/dashboard')
       router.refresh()
-    } catch (error: any) {
-      toast.error(error.message || 'Invalid credentials')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Invalid credentials'
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }

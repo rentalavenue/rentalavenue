@@ -21,10 +21,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { toast } from 'sonner'
-import { Plus, Pencil, Trash2, Loader2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Loader2, ArrowLeft } from 'lucide-react'
 import type { Category } from '@/lib/types'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 interface CategoriesContentProps {
@@ -84,8 +83,9 @@ export default function CategoriesContent({ initialCategories }: CategoriesConte
       
       const { data } = await supabase.from('categories').select('*').order('name')
       setCategories(data || [])
-    } catch (error: any) {
-      toast.error(error.message || 'Operation failed')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Operation failed'
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -103,29 +103,29 @@ export default function CategoriesContent({ initialCategories }: CategoriesConte
       
       const { data } = await supabase.from('categories').select('*').order('name')
       setCategories(data || [])
-    } catch (error: any) {
-      toast.error(error.message || 'Delete failed')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Delete failed'
+      toast.error(errorMessage)
     }
   }
 
   return (
-    
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-            <Link 
+          <Link 
             href="/admin/dashboard" 
             className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-2"
-            >
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
-            </Link>
-            <h1 className="text-3xl font-bold text-slate-900">Categories</h1>
-            <p className="text-slate-600 mt-2">Manage product categories</p>
+          </Link>
+          <h1 className="text-3xl font-bold text-slate-900">Categories</h1>
+          <p className="text-slate-600 mt-2">Manage product categories</p>
         </div>
         <Button onClick={() => handleOpenDialog()} className="bg-blue-600 hover:bg-blue-700">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Category
+          <Plus className="mr-2 h-4 w-4" />
+          Add Category
         </Button>
       </div>
 

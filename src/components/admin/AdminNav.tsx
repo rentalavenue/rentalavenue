@@ -17,13 +17,11 @@ export default function AdminNav() {
   const handleLogout = async () => {
     setLoggingOut(true)
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
-      
+      await supabase.auth.signOut()
       toast.success('Logged out successfully')
       router.push('/admin/login')
       router.refresh()
-    } catch (error: any) {
+    } catch {
       toast.error('Logout failed')
     } finally {
       setLoggingOut(false)

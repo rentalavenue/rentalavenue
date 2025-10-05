@@ -54,8 +54,9 @@ export default function EnquiriesContent({ initialEnquiries }: EnquiriesContentP
         .select('*')
         .order('created_at', { ascending: false })
       setEnquiries(data || [])
-    } catch (error: any) {
-      toast.error(error.message || 'Delete failed')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Delete failed'
+      toast.error(errorMessage)
     }
   }
 
@@ -76,8 +77,9 @@ export default function EnquiriesContent({ initialEnquiries }: EnquiriesContentP
         .select('*')
         .order('created_at', { ascending: false })
       setEnquiries(data || [])
-    } catch (error: any) {
-      toast.error(error.message || 'Update failed')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Update failed'
+      toast.error(errorMessage)
     }
   }
 
