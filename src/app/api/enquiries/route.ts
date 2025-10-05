@@ -2,24 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { enquirySchema } from '@/lib/validations'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const validatedData = enquirySchema.parse(body)
 
-    // Create admin client at runtime, not at module level
-    const supabaseAdmin = createClient(
+    // Use anon key instead of service role key
+    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      }
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from('enquiries')
       .insert({
         name: validatedData.name,
@@ -33,11 +30,15 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
 
-    // Send email notification
+    // Try to send email
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/send-email`, {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin
+      await fetch(`${siteUrl}/api/send-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -49,6 +50,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, data }, { status: 201 })
   } catch (error) {
     console.error('Enquiry submission error:', error)
+    
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
       { error: 'Failed to submit enquiry' },
       { status: 500 }
