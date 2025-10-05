@@ -41,27 +41,34 @@ export default function EnquiryForm({
     },
   })
 
-  const onSubmit = async (data: EnquiryFormData) => {
-    setIsSubmitting(true)
-    try {
-      const response = await fetch('/api/enquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
+    const onSubmit = async (data: EnquiryFormData) => {
+      setIsSubmitting(true)
+      try {
+        const response = await fetch('/api/enquiries', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
 
-      if (!response.ok) throw new Error('Failed to submit enquiry')
+        const result = await response.json()
 
-      toast.success('Enquiry submitted successfully! We will contact you soon.')
-      reset()
-      onSuccess?.()
-    } catch (error) {
-      toast.error('Failed to submit enquiry. Please try again.')
-      console.error(error)
-    } finally {
-      setIsSubmitting(false)
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to submit enquiry')
+        }
+
+        toast.success('Enquiry submitted successfully! We will contact you soon.')
+        reset()
+        onSuccess?.()
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to submit enquiry. Please try again.'
+        toast.error(errorMessage)
+        console.error('Form submission error:', error)
+      } finally {
+        setIsSubmitting(false)
+      }
     }
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
