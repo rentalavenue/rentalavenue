@@ -4,18 +4,30 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { LayoutDashboard, Package, FolderTree, MessageSquare, LogOut } from 'lucide-react'
+import { LayoutDashboard, Package, FolderTree, MessageSquare, LogOut, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import { useState } from 'react'
 
 export default function AdminNav() {
   const pathname = usePathname()
   const router = useRouter()
+  const [loggingOut, setLoggingOut] = useState(false)
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    toast.success('Logged out successfully')
-    router.push('/admin/login')
+    setLoggingOut(true)
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+      
+      toast.success('Logged out successfully')
+      router.push('/admin/login')
+      router.refresh()
+    } catch (error: any) {
+      toast.error('Logout failed')
+    } finally {
+      setLoggingOut(false)
+    }
   }
 
   const navItems = [
@@ -59,12 +71,22 @@ export default function AdminNav() {
 
           <Button
             onClick={handleLogout}
+            disabled={loggingOut}
             variant="outline"
             size="sm"
             className="flex items-center space-x-2"
           >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
+            {loggingOut ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Logging out...</span>
+              </>
+            ) : (
+              <>
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </>
+            )}
           </Button>
         </div>
       </div>
