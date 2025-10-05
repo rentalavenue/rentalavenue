@@ -16,27 +16,28 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-    const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-        const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        })
+      })
 
-        if (error) throw error
+      if (error) throw error
+      if (!data.session) throw new Error('No session created')
 
-        toast.success('Login successful!')
-        router.push('/admin/dashboard')
-        router.refresh()
+      toast.success('Login successful!')
+      router.push('/admin/dashboard')
+      router.refresh()
     } catch (error: any) {
-        toast.error(error.message || 'Invalid credentials')
+      toast.error(error.message || 'Invalid credentials')
     } finally {
-        setLoading(false)
+      setLoading(false)
     }
-    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
