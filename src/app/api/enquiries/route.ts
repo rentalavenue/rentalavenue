@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase/admin'
+import { createClient } from '@supabase/supabase-js'
 import { enquirySchema } from '@/lib/validations'
 
 export async function POST(request: NextRequest) {
@@ -7,7 +7,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validatedData = enquirySchema.parse(body)
 
-    // Insert enquiry into database
+    // Create admin client at runtime, not at module level
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    )
+
     const { data, error } = await supabaseAdmin
       .from('enquiries')
       .insert({
@@ -24,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error
 
-    // Send email notification (we'll add Resend integration later)
+    // Send email notification
     try {
       await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/send-email`, {
         method: 'POST',
@@ -33,7 +44,6 @@ export async function POST(request: NextRequest) {
       })
     } catch (emailError) {
       console.error('Email sending failed:', emailError)
-      // Don't fail the request if email fails
     }
 
     return NextResponse.json({ success: true, data }, { status: 201 })
