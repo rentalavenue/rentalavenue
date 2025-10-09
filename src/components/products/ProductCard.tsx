@@ -21,7 +21,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={imageUrl}
           alt={product.name}
           fill
-          className="object-cover group-hover:scale-110 transition-transform duration-300"
+          className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
           onError={(e) => {
             const target = e.target as HTMLImageElement
             target.src = '/placeholder.jpg'
