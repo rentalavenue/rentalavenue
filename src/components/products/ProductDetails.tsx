@@ -35,22 +35,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </Link>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto lg:items-start">
           {/* Product Image */}
-          <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
-            <div className="relative h-96 lg:h-full min-h-96">
-              <Image
-                src={imageUrl}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = '/placeholder.jpg'
-                }}
-              />
-            </div>
+          <div className="bg-white rounded-2xl shadow-lg p-4 lg:sticky lg:top-24">
+            <img
+              src={imageUrl}
+              alt={product.name}
+              className="w-full h-auto max-h-[1500px] object-contain"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.src = '/placeholder.jpg'
+              }}
+            />
           </div>
 
           {/* Product Info */}
