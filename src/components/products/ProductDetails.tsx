@@ -38,15 +38,21 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto lg:items-start">
           {/* Product Image */}
           <div className="bg-white rounded-2xl shadow-lg p-4 lg:sticky lg:top-24">
-            <img
-              src={imageUrl}
-              alt={product.name}
-              className="w-full h-auto max-h-[1500px] object-contain"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement
-                target.src = '/placeholder.jpg'
-              }}
-            />
+            <div className="relative w-full" style={{ minHeight: '400px' }}>
+              <Image
+                src={imageUrl}
+                alt={product.name}
+                width={1200}
+                height={1500}
+                className="w-full h-auto object-contain"
+                style={{ maxHeight: '1500px' }}
+                priority
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.src = '/placeholder.jpg'
+                }}
+              />
+            </div>
           </div>
 
           {/* Product Info */}

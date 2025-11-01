@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import ProductCard from './ProductCard'
 import type { Product, Category } from '@/lib/types'
@@ -227,7 +226,7 @@ export default function ProductsContent() {
                     No products found
                   </h3>
                   <p className="text-slate-600">
-                    Try adjusting your search or filters to find what you're looking for.
+                    Try adjusting your search or filters to find what you&apos;re looking for.
                   </p>
                 </div>
               </div>
