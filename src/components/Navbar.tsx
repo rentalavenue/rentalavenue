@@ -29,12 +29,12 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-md'
-          : 'bg-transparent'
+          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50'
+          : 'bg-white/90 backdrop-blur-md shadow-md'
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-15">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
@@ -42,9 +42,9 @@ export default function Navbar() {
               alt="Rental Avenue"
               width={50}
               height={50}
-              className="h-12 w-auto"
+              className="h-9 w-auto"
             />
-            <span className="text-xl font-bold text-slate-900">
+            <span className="text-lg font-bold text-slate-900">
               RENTAL AVENUE
             </span>
           </Link>
@@ -55,13 +55,13 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-slate-700 hover:text-blue-600 font-medium transition-colors"
+                className="text-slate-800 hover:text-blue-600 font-semibold transition-colors"
               >
                 {link.label}
               </Link>
             ))}
             <Link href="/contact">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shadow-md">
                 Get Quote
               </Button>
             </Link>
@@ -84,14 +84,14 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t"
+            className="md:hidden bg-white/95 backdrop-blur-lg border-t border-slate-200"
           >
             <div className="container mx-auto px-4 py-4 space-y-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block text-slate-700 hover:text-blue-600 font-medium py-2"
+                  className="block text-slate-800 hover:text-blue-600 font-semibold py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
